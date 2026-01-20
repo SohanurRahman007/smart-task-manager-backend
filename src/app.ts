@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/database";
 import authRoutes from "./routes/auth";
 import { errorHandler } from "./middleware/errorHandler";
+import workflowRoutes from "./routes/workflow";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/workflows", workflowRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
