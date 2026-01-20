@@ -16,7 +16,10 @@ export const auth = async (
     const token = req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
-      return res.status(401).json({ error: "Authentication required" });
+      return res.status(401).json({
+        success: false,
+        error: "Authentication required",
+      });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
@@ -25,7 +28,10 @@ export const auth = async (
     const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
-      return res.status(401).json({ error: "User not found" });
+      return res.status(401).json({
+        success: false,
+        error: "User not found",
+      });
     }
 
     req.user = user;
@@ -33,18 +39,25 @@ export const auth = async (
     next();
   } catch (error) {
     console.error("Auth error:", error);
-    res.status(401).json({ error: "Invalid token" });
+    res.status(401).json({
+      success: false,
+      error: "Invalid token",
+    });
   }
 };
 
 export const requireRole = (...roles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return res.status(401).json({ error: "Authentication required" });
+      return res.status(401).json({
+        success: false,
+        error: "Authentication required",
+      });
     }
 
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
+        success: false,
         error: "Insufficient permissions",
         required: roles,
         current: req.user.role,
