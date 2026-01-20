@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export enum UserRole {
   ADMIN = "admin",
   MANAGER = "manager",
@@ -11,7 +13,7 @@ export enum TaskPriority {
 }
 
 export interface IUser {
-  _id: string;
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password: string;
@@ -28,39 +30,38 @@ export interface IWorkflowStage {
 }
 
 export interface IWorkflow {
-  _id: string;
+  _id: Types.ObjectId;
   name: string;
   description?: string;
   stages: IWorkflowStage[];
-  createdBy: string;
+  createdBy: Types.ObjectId;
   isDefault: boolean;
   projectId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Add to existing ITask interface
 export interface ITask {
-  _id: string;
+  _id: Types.ObjectId;
   title: string;
   description: string;
   priority: TaskPriority;
   currentStage: string; // Stage ID
-  assignedTo: string[]; // User IDs
+  assignedTo: Types.ObjectId[];
   dueDate?: Date;
   completedAt?: Date;
-  workflowId: string;
+  workflowId: Types.ObjectId;
   projectId?: string;
-  createdBy: string;
+  createdBy: Types.ObjectId;
   tags?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface IActivityLog {
-  _id: string;
-  taskId: string;
-  userId: string;
+  _id: Types.ObjectId;
+  taskId: Types.ObjectId;
+  userId: Types.ObjectId;
   action: string;
   details: Record<string, any>;
   previousStage?: string;
@@ -69,10 +70,10 @@ export interface IActivityLog {
 }
 
 export interface INotification {
-  _id: string;
-  userId: string;
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
   message: string;
-  taskId?: string;
+  taskId?: Types.ObjectId;
   type:
     | "task_assigned"
     | "stage_changed"
