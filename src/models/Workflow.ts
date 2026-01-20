@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { IWorkflow } from "../types";
+import { IWorkflow, IWorkflowStage } from "../types";
 
-const workflowStageSchema = new Schema({
+const workflowStageSchema = new Schema<IWorkflowStage>({
   id: {
     type: String,
     required: true,
@@ -17,6 +17,10 @@ const workflowStageSchema = new Schema({
     required: true,
     min: 0,
   },
+  color: {
+    type: String,
+    default: "#6B7280",
+  },
 });
 
 const workflowSchema = new Schema<IWorkflow>(
@@ -25,6 +29,10 @@ const workflowSchema = new Schema<IWorkflow>(
       type: String,
       required: true,
       trim: true,
+    },
+    description: {
+      type: String,
+      default: "",
     },
     stages: [workflowStageSchema],
     createdBy: {
@@ -36,6 +44,10 @@ const workflowSchema = new Schema<IWorkflow>(
       type: Boolean,
       default: false,
     },
+    projectId: {
+      type: String,
+      default: "default",
+    },
   },
   {
     timestamps: true,
@@ -46,5 +58,6 @@ const workflowSchema = new Schema<IWorkflow>(
 workflowSchema.index({ "stages.order": 1 }, { unique: true, sparse: true });
 workflowSchema.index({ createdBy: 1 });
 workflowSchema.index({ isDefault: 1 });
+workflowSchema.index({ projectId: 1 });
 
 export const Workflow = mongoose.model<IWorkflow>("Workflow", workflowSchema);
